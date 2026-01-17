@@ -2,6 +2,10 @@
 
 Create color palettes from a given initial color.
 
+![screenshot](screenshot.png)
+
+Click on a color to get its hexadecimal.
+
 ## args
 
 You can run it with no args:

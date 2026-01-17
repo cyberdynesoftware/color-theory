@@ -20,7 +20,7 @@
 (define height 480)
 
 (define (open)
-  (InitWindow width height "Colors")
+  (InitWindow width height "Color theory")
   (SetTargetFPS 60))
 
 (define (draw)
