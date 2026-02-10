@@ -5,3 +5,6 @@ compiled/
 *.bak
 \#*
 .\#*
+
+color-theory
+color-dist/

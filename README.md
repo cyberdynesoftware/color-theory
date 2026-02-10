@@ -10,7 +10,7 @@ Click on a color to get its hexadecimal.
 
 You can run it with no args:
 
-`racket -tm color-theory.rkt`
+`racket -t color-theory.rkt`
 
 ### fidelity
 

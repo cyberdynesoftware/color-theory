@@ -1,12 +1,14 @@
 #lang racket
 
-(provide main
-         dim/brighten)
+(provide dim/brighten)
 
 (require racket/fixnum
-         raylib/generated/unsafe)
+         raylib/2d/unsafe)
 
-(define (main (fidelity "5") . args)
+(module+ main
+  (apply run (vector->list (current-command-line-arguments))))
+
+(define (run (fidelity "5") . args)
   (set-colors (string->number fidelity) args)
   (open)
   (let loop ((nix null))
