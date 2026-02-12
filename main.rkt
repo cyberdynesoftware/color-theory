@@ -2,15 +2,16 @@
 
 (provide dim/brighten)
 
-(require racket/fixnum
-         raylib/2d/unsafe)
+(require "base-colors.rkt"
+         raylib/2d/unsafe
+         racket/fixnum)
 
 (module+ main
   (apply run (vector->list (current-command-line-arguments))))
 
 (define (run (fidelity "5") . args)
   (set-colors (string->number fidelity) args)
-  (open)
+  (open-window)
   (let loop ((nix null))
     (handle-input)
     (draw)
@@ -21,7 +22,7 @@
 (define width 640)
 (define height 480)
 
-(define (open)
+(define (open-window)
   (InitWindow width height "Color theory")
   (SetTargetFPS 60))
 
@@ -68,15 +69,8 @@
                        (fmt (Color-b color))))))
 
 (define (set-colors fidelity color-list)
-  (case (length color-list)
-    ((1) (let ((color (decode-color-string (car color-list))))
-           (set! colors (color-grid (opposites color) fidelity))))
-    ((2) (let ((color1 (decode-color-string (car color-list)))
-               (color2 (decode-color-string (cadr color-list))))
-           (let ((start-colors (opposite color1 color2)))
-             (set! colors (color-grid start-colors fidelity)))))
-    (else (let ((color (make-Color #xFF #x00 #x00 #xFF)))
-            (set! colors (color-grid (opposites color) fidelity))))))
+  (let ((mycolors (map decode-color-string color-list)))
+    (set! colors (color-grid (base-colors mycolors) fidelity))))
 
 (define (decode-color-string color-string)
   (let ((r (string->number (substring color-string 0 2) 16))
