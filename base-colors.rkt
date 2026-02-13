@@ -2,7 +2,7 @@
 
 (provide base-colors)
 
-(require "tones.rkt"
+(require "color-helper.rkt"
          raylib/2d/unsafe)
 
 (define (base-colors color-list)
@@ -17,9 +17,6 @@
     (list color
           (make-Color b r g #xFF)
           (make-Color g b r #xFF))))
-
-(define (color->values color)
-  (values (Color-r color) (Color-g color) (Color-b color))) 
 
 (define (shift-dir index target)
   (let ((dir (- target index)))
@@ -43,15 +40,8 @@
            (index1 (index-of lst1 max1))
            (index2 (index-of lst2 max2))
            (target (car (remove* (list index1 index2) '(0 1 2)))))
-      (values (list c1
-                    c2 
-                    (color+ (list-shift lst1 (shift-dir index1 target))
-                            (list-shift lst2 (shift-dir index2 target))))))))
-
-(define (color+ lst1 lst2)
-  (let* ((r (+ (first lst1) (first lst2)))
-         (g (+ (second lst1) (second lst2)))
-         (b (+ (third lst1) (third lst2)))
-         (max1 (apply max lst1))
-         (max2 (apply max lst2)))
-    (dim-color r g b (/ (+ max1 max2) 2))))
+      (values
+        (list c1
+              c2 
+              (color/list+ (list-shift lst1 (shift-dir index1 target))
+                           (list-shift lst2 (shift-dir index2 target))))))))
