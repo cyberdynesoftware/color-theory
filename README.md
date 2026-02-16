@@ -24,9 +24,9 @@ Run `racket -t main.rkt -- --fidelity 4` for 48 colors. The default fidelity 2 c
 
 ### Starting colors
 
-You can specify one or two colors in hexadecimal which will be used as input for the colors to generate. Check out the color palette for *Burgundy*:
+You can specify one or two colors in hexadecimal which will be used as input for the colors to generate. Check out the color palette for this warm red color:
 
-`racket -t main.rkt 800020`
+`racket -t main.rkt -- F9423A`
 
 ## Dependencies
 

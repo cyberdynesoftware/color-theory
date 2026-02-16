@@ -2,6 +2,7 @@
 
 (require "base-colors.rkt"
          "color-row.rkt"
+         "shades.rkt"
          raylib/2d/unsafe
          racket/fixnum
          racket/flonum)
@@ -10,7 +11,7 @@
   (let ((width 640)
         (height 480)
         (fidelity 2)
-        (tones 0)
+        (tints 0)
         (shades 0))
     (command-line
       #:once-each
@@ -21,29 +22,41 @@
       (("--fidelity") it
                       "number of iterations to create colors"
                       (set! fidelity (string->number it)))
-      (("--tones") it
-                   "number of tones per color"
-                   (set! tones (string->number it)))
+      (("--tints") it
+                   "number of tints per color"
+                   (set! tints (string->number it)))
       (("--shades") it
                     "number of shades per color"
                     (set! shades (string->number it)))
       #:args color-args
       (let* ((input-colors (map decode-color-string color-args))
              (colors (color-row (base-colors input-colors) fidelity))
-             (color-board (create-color-board colors width height)))
+             (tinted-colors (create-tints colors tints))
+             (color-board (create-color-board colors tinted-colors width height)))
         (run width height color-board)))))
 
 (define-struct cell (rect color))
 
-(define (create-color-board colors width height)
-  (let ((cell-width (fl/ (fx->fl width) (fx->fl (length colors)))))
+(define (create-color-board colors tints width height)
+  (let* ((num-rows (add1 (length tints)))
+         (cell-width (fl/ (fx->fl width) (fx->fl (length colors))))
+         (cell-height (fl/ (fx->fl height) (fx->fl num-rows))))
+    (append
+      (create-color-row colors 0 cell-width cell-height)
+      (flatten
+        (for/list ((shades-row tints)
+                   (row-index (range 1 num-rows)))
+          (create-color-row shades-row row-index cell-width cell-height))))))
+
+(define (create-color-row colors row-index cell-width cell-height)
+  (let ((y (fl* (fx->fl row-index) cell-height)))
     (for/list ((x (length colors))
                (color colors))
       (make-cell
         (make-Rectangle (fl* (fx->fl x) cell-width)
-                        0.
+                        y
                         cell-width
-                        (fx->fl height))
+                        cell-height)
         color))))
 
 (define (run width height color-board)
