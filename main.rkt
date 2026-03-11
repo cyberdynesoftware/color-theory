@@ -15,19 +15,23 @@
         (shades 0))
     (command-line
       #:once-each
-      (("--size") w h
-                  "size of the window in pixels"
-                  (set! width (string->number w))
-                  (set! height (string->number h)))
-      (("--fidelity") it
-                      "number of iterations to create colors"
-                      (set! fidelity (string->number it)))
-      (("--tints") it
-                   "number of tints per color"
-                   (set! tints (string->number it)))
-      (("--shades") it
-                    "number of shades per color"
-                    (set! shades (string->number it)))
+      (("--size")
+       w h
+       "size of the window in pixels"
+       (set! width (string->number w))
+       (set! height (string->number h)))
+      (("--fidelity")
+       it
+       "number of iterations to create colors"
+       (set! fidelity (string->number it)))
+      (("--tints")
+       it
+       "number of tints per color"
+       (set! tints (string->number it)))
+      (("--shades")
+       it
+       "number of shades per color"
+       (set! shades (string->number it)))
       #:args color-args
       (let* ((input-colors (map decode-color-string color-args))
              (colors (color-row (base-colors input-colors) fidelity))
@@ -75,19 +79,6 @@
 (define (draw-color-board color-board)
   (for ((cell color-board))
     (DrawRectangleRec (cell-rect cell) (cell-color cell))))
-
-(define (rectangles colors width height)
-  (let ((h (/ height (length colors))))
-    (for/list ((y (length colors))
-               (row colors))
-      (let ((w (/ width (length row))))
-        (for/list ((x (length row))
-                   (color row))
-          (list (make-Rectangle (exact->inexact (* x w))
-                                (exact->inexact (* y h))
-                                (exact->inexact w)
-                                (exact->inexact h))
-                color))))))
 
 (define (handle-input color-board)
   (when (IsMouseButtonPressed MOUSE_BUTTON_LEFT)

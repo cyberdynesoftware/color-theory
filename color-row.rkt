@@ -1,6 +1,8 @@
 #lang racket
 
-(provide color-row)
+(provide color-row
+         add-between-f
+         partition-clj)
 
 (require "color-helper.rkt")
 
