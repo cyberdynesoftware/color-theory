@@ -26,33 +26,39 @@
        (set! fidelity (string->number it)))
       (("--tints")
        it
-       "number of tints per color"
+       "number of iterations to create tints"
        (set! tints (string->number it)))
       (("--shades")
        it
-       "number of shades per color"
+       "number of iterations to create shades"
        (set! shades (string->number it)))
       #:args color-args
       (let* ((input-colors (map decode-color-string color-args))
              (colors (color-row (base-colors input-colors) fidelity))
-             (tinted-colors (create-tints colors tints))
-             (color-board (create-color-board colors tinted-colors width height)))
+             (tinted-colors (create-blends colors tints WHITE))
+             (shaded-colors (create-blends colors shades BLACK))
+             (color-board (create-color-board colors tinted-colors shaded-colors width height)))
         (run width height color-board)))))
 
 (define-struct cell (rect color))
 
-(define (create-color-board colors tints width height)
-  (let* ((num-rows (add1 (length tints)))
+(define (create-color-board colors tints shades width height)
+  (let* ((num-rows (+ (length tints) (length shades) 1))
          (cell-width (fl/ (fx->fl width) (fx->fl (length colors))))
          (cell-height (fl/ (fx->fl height) (fx->fl num-rows))))
     (append
-      (create-color-row colors 0 cell-width cell-height)
       (flatten
-        (for/list ((shades-row tints)
-                   (row-index (range 1 num-rows)))
-          (create-color-row shades-row row-index cell-width cell-height))))))
+        (for/list ((shaded-row (reverse shades))
+                   (row-index (range 0 (length shades))))
+          (render-color-row shaded-row row-index cell-width cell-height)))
+      (render-color-row colors (length shades) cell-width cell-height)
+      (flatten
+        (for/list ((tinted-row tints)
+                   (row-index (range (add1 (length shades)) num-rows)))
+          (displayln row-index)
+          (render-color-row tinted-row row-index cell-width cell-height))))))
 
-(define (create-color-row colors row-index cell-width cell-height)
+(define (render-color-row colors row-index cell-width cell-height)
   (let ((y (fl* (fx->fl row-index) cell-height)))
     (for/list ((x (length colors))
                (color colors))

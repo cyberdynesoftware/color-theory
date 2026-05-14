@@ -1,22 +1,22 @@
 #lang racket
 
-(provide create-tints)
+(provide create-blends)
 
 (require "color-helper.rkt"
          "color-row.rkt"
          racket/fixnum
          raylib/2d/unsafe)
 
-(define (create-tints colors tints-iterations)
-  (if (= tints-iterations 0)
+(define (create-blends colors iterations blend-color)
+  (if (= iterations 0)
     empty
-    (let loop ((result (list (blend-colors colors WHITE)))
-               (counter (sub1 tints-iterations)))
+    (let loop ((result (list (blend-colors colors blend-color)))
+               (counter (sub1 iterations)))
       (if (= counter 0)
           result
           (let ((new-rows (blend-colors-between result)))
             (loop (prepend-color-row 
-                    (append-color-row new-rows WHITE)
+                    (append-color-row new-rows blend-color)
                     colors)
                   (sub1 counter)))))))
 
