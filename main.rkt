@@ -3,6 +3,7 @@
 (require "base-colors.rkt"
          "color-row.rkt"
          "shades.rkt"
+         "color-helper.rkt"
          raylib/2d/unsafe
          racket/fixnum
          racket/flonum)
@@ -107,6 +108,11 @@
         (g (string->number (substring color-string 2 4) 16))
         (b (string->number (substring color-string 4 6) 16)))
     (make-Color r g b #xFF)))
+
+(define (color-add cs1 cs2)
+  (let ((c1 (decode-color-string cs1))
+        (c2 (decode-color-string cs2)))
+    (display-color (color+ c1 c2))))
 
 (define (factors number)
   (let ((x number)
