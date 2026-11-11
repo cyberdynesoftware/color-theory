@@ -38,4 +38,4 @@ Specify tints and/or shades with `--tints` and `--shades`. Again, this is not th
 
 ## Dependencies
 
-color-theory requieres [raylib](https://www.raylib.com/). Install the wrapper with `raco setup raylib`.
+color-theory requieres [raylib](https://www.raylib.com/). Install the wrapper with `raco pkg install raylib`.
